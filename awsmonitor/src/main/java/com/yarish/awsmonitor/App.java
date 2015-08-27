@@ -1,17 +1,18 @@
 package com.yarish.awsmonitor;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.HashMap;
 
+import org.apache.log4j.Logger;
 
-public class App 
-{
-	private final static Logger logger = Logger.getLogger(App.class.getName());
-	
+import com.yarish.awsmonitor.model.Region;
+
+public class App {
+	private static final Logger LOG = Logger.getLogger(App.class.getName());
+
 	public static void main(String[] args) {
-		logger.setLevel(Level.ALL);
-		logger.warning("Hello World!");
+		LOG.info("info");
+		HashMap<String, String> regions = Region.getRegions();
+		LOG.info("regions=" + regions);
 	}
-	
-	
+
 }

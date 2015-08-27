@@ -19,7 +19,7 @@ public final class Region {
 		regionMap.put("South America (Sao Paulo)","https://ec2.sa-east-1.amazonaws.com");
 	}
 	
-	public final HashMap<String, String> getRegions(){
+	public final static HashMap<String, String> getRegions(){
 		return regionMap;
 	}
 
