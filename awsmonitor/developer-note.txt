@@ -1,0 +1,27 @@
+
+how to compile and package into a sigle runnable jar 
+$ mvn clean compile assembly:single
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+references
+----------
+1.http://stackoverflow.com/questions/574594/how-can-i-create-an-executable-jar-with-dependencies-using-maven
+2.http://www.mkyong.com/maven/how-to-create-a-jar-file-with-maven/
