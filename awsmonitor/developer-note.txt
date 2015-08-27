@@ -24,4 +24,5 @@ $ mvn clean compile assembly:single
 references
 ----------
 1.http://stackoverflow.com/questions/574594/how-can-i-create-an-executable-jar-with-dependencies-using-maven
-2.http://www.mkyong.com/maven/how-to-create-a-jar-file-with-maven/
+2.http://www.mkyong.com/maven/maven-create-a-fat-jar-file-one-jar-example/
+3.http://www.mkyong.com/maven/how-to-create-a-jar-file-with-maven/
