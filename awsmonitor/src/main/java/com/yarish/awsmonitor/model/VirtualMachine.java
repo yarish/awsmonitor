@@ -72,12 +72,15 @@ public class VirtualMachine {
         String instanceState = InstanceState.getName();
         // Integer code = InstanceState.getCode();
 
-        VirtualMachine vm = new VirtualMachine();
-        vm.setInstanceId(instanceId);
-        vm.setTag(tag);
-        vm.setInstanceType(instanceType);
-        vm.setInstanceState(instanceState);
-        vmList.add(vm);
+        if (instanceState.equalsIgnoreCase("running") || instanceState.equalsIgnoreCase("shutdown")) {
+          VirtualMachine vm = new VirtualMachine();
+          vm.setInstanceId(instanceId);
+          vm.setTag(tag);
+          vm.setInstanceType(instanceType);
+          vm.setInstanceState(instanceState);
+          vmList.add(vm);
+        }
+
       }
 
     }

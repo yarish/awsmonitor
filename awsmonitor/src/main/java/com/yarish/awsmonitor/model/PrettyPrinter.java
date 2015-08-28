@@ -20,7 +20,8 @@ public class PrettyPrinter {
 
 
   public static String addHeader() {
-    return properties.getProperty("gmail.body.header");
+    String header = properties.getProperty("gmail.body.header") + properties.getProperty("gmail.body.header_underline");
+    return header;
   }
 
   public static String addFooter() {
@@ -30,15 +31,17 @@ public class PrettyPrinter {
   public static String printVM(String region, List<VirtualMachine> listOfVMs) {
 
     StringBuffer buffer = new StringBuffer();
-    buffer.append(BLANKLINE).append(HALF_UNDERLINE).append(region).append(HALF_UNDERLINE);
+    buffer.append(BLANKLINE).append(HALF_UNDERLINE).append(region).append(HALF_UNDERLINE).append("\n");
 
-    for (VirtualMachine vmResult : listOfVMs) {
-      buffer.append(vmResult.getTag().trim() + "           | " + vmResult.getInstanceId().trim() + "               | "
-          + vmResult.getInstanceType().trim() + "               | " + vmResult.getInstanceState().trim()
-          + "         \n");
+    for (VirtualMachine vm : listOfVMs) {
+      buffer.append(vm.getTag().trim() + "           | " + vm.getInstanceId().trim() + "               | "
+          + vm.getInstanceType().trim() + "               | " + vm.getInstanceState().trim() + "         \n\n");
+    }
+    if (listOfVMs.size() == 0) {
+      buffer.append("\t\t No Virtual Machines are running...\n\n");
     }
 
-
+    LOG.info(buffer.toString());
     return buffer.toString();
   }
 

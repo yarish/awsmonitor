@@ -8,10 +8,8 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.yarish.awsmonitor.App;
-
 public final class EmailSetting {
-  private static final Logger LOG = LoggerFactory.getLogger(App.class);
+  private static final Logger LOG = LoggerFactory.getLogger(EmailSetting.class);
   private Properties properties;
 
   public Properties loadProperties() {

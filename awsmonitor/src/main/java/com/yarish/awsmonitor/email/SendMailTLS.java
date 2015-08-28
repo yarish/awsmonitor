@@ -18,7 +18,7 @@ import com.yarish.awsmonitor.model.EmailSetting;
 
 public class SendMailTLS {
 
-  private static final Logger logger = LoggerFactory.getLogger(App.class);
+  private static final Logger logger = LoggerFactory.getLogger(SendMailTLS.class);
 
   Properties properties;
 
@@ -60,7 +60,7 @@ public class SendMailTLS {
       message.setFrom(new InternetAddress(gmail_from_address));
       message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(gmail_from_address));
       message.setSubject(gmail_subject);
-      message.setText(gmail_body_header + body);
+      message.setText( body);
       Transport.send(message);
 
     } catch (MessagingException e) {

@@ -19,11 +19,13 @@ public class App {
   private static final Logger LOG = LoggerFactory.getLogger(App.class);
   private final static Integer SLEEP_TIME = 1000 * 60 * 10; // 5 min
   static AmazonEC2 ec2 = null;
+  static AWSAccount awsAccount;
 
   public static void main(String[] args) {
 
     String endpointURL = null;
     int totalVMCount = 0;
+    PrettyPrinter prettyPrinter = new PrettyPrinter();
 
     String fragement = "";
     List<String> bodyfragements = new ArrayList<String>();
@@ -38,18 +40,21 @@ public class App {
         // form mail body header
         fragement = PrettyPrinter.addHeader();
         bodyfragements.add(fragement);
+        LOG.info("bodyfragements=" + bodyfragements);
 
 
         for (String region : regions) {// for each region
           LOG.info("Processing ....region=" + region);
           endpointURL = regionsMap.get(region);
           LOG.info("endpoint url=" + endpointURL);
-          AWSAccount account = new AWSAccount();
-          ec2 = account.getAWSClient(endpointURL);
+          awsAccount = new AWSAccount();
+          ec2 = awsAccount.getAWSClient(endpointURL);
 
           // get the list of virtual machines running .
           VirtualMachine machine = new VirtualMachine();
           List<VirtualMachine> listOfVMs = machine.getListOfVirtualmachines(ec2);
+
+
 
           // form mail body
           if (listOfVMs.size() > 0) {
@@ -63,9 +68,13 @@ public class App {
             LOG.info("No Virtual machines are currently running on this {}region", region);
           }
 
+          if (listOfVMs.size() > 0) {
+            awsAccount.shutdownVMs(listOfVMs, ec2);
+          }
 
 
         }// end of for each region
+        LOG.info("bodyfragements=" + bodyfragements);
 
         if (totalVMCount == 0) {
           bodyfragements.add("No Virtual machines are currently running on any region");
@@ -75,11 +84,12 @@ public class App {
         fragement = PrettyPrinter.addFooter();
         bodyfragements.add(fragement);
 
-        ec2.shutdown();
 
         String completeBody = PrettyPrinter.print(bodyfragements);
+        LOG.info("completeBody=\n" + completeBody);
         new SendMailTLS().sendEmail(completeBody);
 
+        ec2.shutdown();
         Thread.sleep(SLEEP_TIME);// for every 10 min run this loop
 
       } catch (InterruptedException e) {
