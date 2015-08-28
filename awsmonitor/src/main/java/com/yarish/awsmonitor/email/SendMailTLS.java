@@ -14,84 +14,58 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.yarish.awsmonitor.App;
+import com.yarish.awsmonitor.model.EmailSetting;
 
 public class SendMailTLS {
 
-	private static final Logger logger = LoggerFactory.getLogger(App.class);
-	
-	public static void main(String[] args) {
+  private static final Logger logger = LoggerFactory.getLogger(App.class);
 
-		final String username = "yarish@gmail.com";
-		final String password = "cisco143$9980044534$$";
+  Properties properties;
 
-		Properties props = new Properties();
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.starttls.enable", "true");
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.port", "587");
+  public SendMailTLS() {
+    EmailSetting emailSettings = new EmailSetting();
+    properties = emailSettings.loadProperties();
+  }
 
-		Session session = Session.getInstance(props,
-				new javax.mail.Authenticator() {
-					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(username, password);
-					}
-				});
+  public void sendEmail(String body) {
 
-		try {
+    final String gmail_username = properties.getProperty("gmail.username");
+    final String gmail_password = properties.getProperty("gmail.password");
+    final String mail_smtp_auth = properties.getProperty("mail.smtp.auth");
+    final String mail_smtp_starttls_enable = properties.getProperty("mail.smtp.starttls.enable");
+    final String mail_smtp_host = properties.getProperty("mail.smtp.host");
+    final String mail_smtp_port = properties.getProperty("mail.smtp.port");
+    final String gmail_from_address = properties.getProperty("gmail.from.address");
+    final String gmail_to_address = properties.getProperty("gmail.to.address");
+    final String gmail_subject = properties.getProperty("gmail.subject");
+    final String gmail_body_header = properties.getProperty("gmail.body.header");
+    final String gmail_body_main = properties.getProperty("gmail.body.main");
+    final String gmail_body_footer = properties.getProperty("gmail.body.footer");
 
-			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress("yarish@gmail.com"));
-			message.setRecipients(Message.RecipientType.TO,
-					InternetAddress.parse("ykjraman@jamcracker.com"));
-			message.setSubject("AWS : Running VM Instances");
-			message.setText("Dear Mail Crawler,"
-					+ "\n\n No spam to my email, please!");
+    Properties props = new Properties();
+    props.put("mail.smtp.auth", mail_smtp_auth);
+    props.put("mail.smtp.starttls.enable", mail_smtp_starttls_enable);
+    props.put("mail.smtp.host", mail_smtp_host);
+    props.put("mail.smtp.port", mail_smtp_port);
 
-			Transport.send(message);
+    Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+      protected PasswordAuthentication getPasswordAuthentication() {
+        return new PasswordAuthentication(gmail_username, gmail_password);
+      }
+    });
 
-			System.out.println("Done");
+    try {
 
-		} catch (MessagingException e) {
-			throw new RuntimeException(e);
-		}
-	}
+      Message message = new MimeMessage(session);
+      message.setFrom(new InternetAddress(gmail_from_address));
+      message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(gmail_from_address));
+      message.setSubject(gmail_subject);
+      message.setText(gmail_body_header + body);
+      Transport.send(message);
 
-	public boolean sendEmail(String body) {
+    } catch (MessagingException e) {
+      throw new RuntimeException(e);
+    }
 
-		final String username = "yarish@gmail.com";
-		final String password = "cisco143$9980044534";
-
-		Properties props = new Properties();
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.starttls.enable", "true");
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.port", "587");
-
-		Session session = Session.getInstance(props,
-				new javax.mail.Authenticator() {
-					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(username, password);
-					}
-				});
-
-		try {
-
-			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress("ykjraman@jamcracker.com"));
-			message.setRecipients(Message.RecipientType.TO,
-					InternetAddress.parse("ykjraman@jamcracker.com"));
-			message.setSubject("AWS : Running VM Instances Monitoring Report");
-			String firstLine = "automated email and scripts runs every 6 hours !\n";
-			message.setText(firstLine + body);
-
-			Transport.send(message);
-
-			System.out.println("Done");
-			return true;
-
-		} catch (MessagingException e) {
-			throw new RuntimeException(e);
-		}
-
-	}
+  }
 }

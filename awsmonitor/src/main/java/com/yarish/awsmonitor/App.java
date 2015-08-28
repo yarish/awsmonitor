@@ -1,19 +1,93 @@
 package com.yarish.awsmonitor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.amazonaws.services.ec2.AmazonEC2;
+import com.yarish.awsmonitor.email.SendMailTLS;
+import com.yarish.awsmonitor.model.AWSAccount;
+import com.yarish.awsmonitor.model.PrettyPrinter;
 import com.yarish.awsmonitor.model.Region;
+import com.yarish.awsmonitor.model.VirtualMachine;
 
 public class App {
-	private static final Logger logger = LoggerFactory.getLogger(App.class);
+  private static final Logger LOG = LoggerFactory.getLogger(App.class);
+  private final static Integer SLEEP_TIME = 1000 * 60 * 10; // 5 min
+  static AmazonEC2 ec2 = null;
 
-	public static void main(String[] args) {
+  public static void main(String[] args) {
 
-		HashMap<String, String> regions = Region.getRegions();
-		logger.info("regions=\n" + regions);
-	}
+    String endpointURL = null;
+    int totalVMCount = 0;
+
+    String fragement = "";
+    List<String> bodyfragements = new ArrayList<String>();
+
+
+    HashMap<String, String> regionsMap = Region.getRegions();
+    LOG.info("regions mpa =\n" + regionsMap);
+    Set<String> regions = regionsMap.keySet();
+    while (true) { // Infinite loop
+      try {
+
+        // form mail body header
+        fragement = PrettyPrinter.addHeader();
+        bodyfragements.add(fragement);
+
+
+        for (String region : regions) {// for each region
+          LOG.info("Processing ....region=" + region);
+          endpointURL = regionsMap.get(region);
+          LOG.info("endpoint url=" + endpointURL);
+          AWSAccount account = new AWSAccount();
+          ec2 = account.getAWSClient(endpointURL);
+
+          // get the list of virtual machines running .
+          VirtualMachine machine = new VirtualMachine();
+          List<VirtualMachine> listOfVMs = machine.getListOfVirtualmachines(ec2);
+
+          // form mail body
+          if (listOfVMs.size() > 0) {
+            int noOfVMS = listOfVMs.size();
+            fragement = PrettyPrinter.printVM(region, listOfVMs);
+            bodyfragements.add(fragement);
+            totalVMCount = totalVMCount + noOfVMS;
+            LOG.info("{} of vms are currently running in this {} region", noOfVMS, region);
+          } else {
+            totalVMCount = totalVMCount + listOfVMs.size();
+            LOG.info("No Virtual machines are currently running on this {}region", region);
+          }
+
+
+
+        }// end of for each region
+
+        if (totalVMCount == 0) {
+          bodyfragements.add("No Virtual machines are currently running on any region");
+        }
+
+        // form mail body footer
+        fragement = PrettyPrinter.addFooter();
+        bodyfragements.add(fragement);
+
+        ec2.shutdown();
+
+        String completeBody = PrettyPrinter.print(bodyfragements);
+        new SendMailTLS().sendEmail(completeBody);
+
+        Thread.sleep(SLEEP_TIME);// for every 10 min run this loop
+
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    } // end of infinite loop
+
+
+  }
 
 }

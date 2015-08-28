@@ -6,23 +6,23 @@ import junit.framework.TestCase;
 
 public class EmailSettingTest extends TestCase {
 
-	EmailSetting emailSetting;
+  EmailSetting emailSetting;
 
-	@Override
-	protected void setUp() throws Exception {
-		emailSetting = new EmailSetting();
+  @Override
+  protected void setUp() throws Exception {
+    emailSetting = new EmailSetting();
 
-	}
+  }
 
-	public void testProperyLoadingIntoEmailSettings() {
-		Properties properties = emailSetting.loadProperties();
-		assertNotNull(properties);
-		assertEquals("yarish@gmail.com", properties.get("gmail.username"));
-	}
+  public void testProperyLoadingIntoEmailSettings() {
+    Properties properties = emailSetting.loadProperties();
+    assertNotNull(properties);
+    assertEquals("yarish@gmail.com", properties.get("gmail.username"));
+  }
 
-	@Override
-	protected void tearDown() throws Exception {
-		emailSetting = null;
-	}
+  @Override
+  protected void tearDown() throws Exception {
+    emailSetting = null;
+  }
 
 }
