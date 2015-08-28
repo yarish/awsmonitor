@@ -13,7 +13,6 @@ public class App {
 	public static void main(String[] args) {
 
 		HashMap<String, String> regions = Region.getRegions();
-		logger.debug("regions=\n" + regions);
 		logger.info("regions=\n" + regions);
 	}
 
