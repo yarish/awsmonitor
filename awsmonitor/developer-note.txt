@@ -2,6 +2,13 @@
 how to compile and package into a sigle runnable jar 
 $ mvn clean compile assembly:single
 
+say $HOME is the place where the executable jar is kept and run
+$HOME is in classpath of the jar
+so create folder structure and keep the files
+$HOME/main/resources 
+					-- app.properties
+
+
 ---
 
 
@@ -28,3 +35,4 @@ references
 3.http://www.mkyong.com/maven/how-to-create-a-jar-file-with-maven/
 http://saltnlight5.blogspot.sg/2013/08/how-to-configure-slf4j-with-different.html
 https://github.com/yarish/styleguide
+http://stackoverflow.com/questions/4126030/executable-jar-wont-find-the-properties-files
