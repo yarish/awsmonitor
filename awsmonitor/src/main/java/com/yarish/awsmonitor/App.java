@@ -17,7 +17,7 @@ import com.yarish.awsmonitor.model.VirtualMachine;
 
 public class App {
   private static final Logger LOG = LoggerFactory.getLogger(App.class);
-  private final static Integer SLEEP_TIME = 1000 * 60 * 10; // 5 min
+  private final static Integer SLEEP_TIME = 1000 * 60 * 60 * 6; // 6 hour
   static AmazonEC2 ec2 = null;
   static AWSAccount awsAccount;
 
@@ -34,7 +34,7 @@ public class App {
     HashMap<String, String> regionsMap = Region.getRegions();
     LOG.info("regions mpa =\n" + regionsMap);
     Set<String> regions = regionsMap.keySet();
-    while (true) { // Infinite loop
+//    while (true) { // Infinite loop
       try {
 
         // form mail body header
@@ -77,7 +77,7 @@ public class App {
         LOG.info("bodyfragements=" + bodyfragements);
 
         if (totalVMCount == 0) {
-          bodyfragements.add("No Virtual machines are currently running on any region");
+          bodyfragements.add("No Virtual machines are currently running on any region\n");
         }
 
         // form mail body footer
@@ -91,11 +91,13 @@ public class App {
 
         ec2.shutdown();
         Thread.sleep(SLEEP_TIME);// for every 10 min run this loop
+        fragement = "";
+        bodyfragements.clear();
 
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
-    } // end of infinite loop
+//    } // end of infinite loop
 
 
   }

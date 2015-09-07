@@ -30,6 +30,8 @@ public final class EmailSetting {
       LOG.info("gmail.body.header=" + properties.getProperty("gmail.body.header"));
       LOG.info("gmail.body.main=" + properties.getProperty("gmail.body.main"));
       LOG.info("gmail.body.footer=" + properties.getProperty("gmail.body.footer"));
+      
+      LOG.info("quartz.job.scheduler.interval.in.hours=" + properties.getProperty("quartz.job.scheduler.interval.in.hours"));
 
     } catch (IOException e) {
       e.printStackTrace();

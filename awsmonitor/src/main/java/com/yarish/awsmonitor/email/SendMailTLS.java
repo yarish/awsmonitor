@@ -58,9 +58,9 @@ public class SendMailTLS {
 
       Message message = new MimeMessage(session);
       message.setFrom(new InternetAddress(gmail_from_address));
-      message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(gmail_from_address));
+      message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(gmail_to_address));
       message.setSubject(gmail_subject);
-      message.setText( body);
+      message.setText(body);
       Transport.send(message);
 
     } catch (MessagingException e) {

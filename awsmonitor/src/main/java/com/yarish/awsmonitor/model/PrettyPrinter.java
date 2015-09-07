@@ -56,6 +56,9 @@ public class PrettyPrinter {
 
   }
 
-
+  public int getIntervalInHours() {
+    int interval = Integer.parseInt(properties.getProperty("quartz.job.scheduler.interval.in.hours"));
+    return interval;
+  }
 
 }
